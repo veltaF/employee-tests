@@ -16,35 +16,43 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-
-    - name: Install dependencies
+    - name: Check if Python is installed and list available versions
       run: |
-        python3 -m venv test-env
-        source test-env/bin/activate
-        pip install --upgrade pip
-        pip install pytest requests allure-pytest
+        echo "Checking Python version..."
+        python3 --version || echo "Python3 is not installed"
+        ls /usr/bin/python* || echo "No Python binaries found"
+
+    - name: Install dependencies globally
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install Allure CLI
+      run: |
+        wget https://github.com/allure-framework/allure2/releases/download/2.30.0/allure-2.30.0.tgz
+        tar -xzf allure-2.30.0.tgz -C ~/
+        ln -s ~/allure-2.30.0/bin/allure /usr/local/bin/allure
+        allure --version
 
     - name: Run tests and generate Allure results
       run: |
-        source test-env/bin/activate
         pytest --alluredir=./allure-results
 
     - name: Generate single-file Allure report
       run: |
         allure generate --single-file ./allure-results -o ./allure-report
 
-    - name: Upload Allure Report as an artifact
+
+    - name: Upload Allure Report as an artifact 
       uses: actions/upload-artifact@v3
       with:
         name: allure-report
         path: ./allure-report/index.html
 
-    - name: Save Allure report as a GitHub Pages artifact
+
+    - name: Deploy Allure Report to GitHub Pages 
       uses: peaceiris/actions-gh-pages@v3
-      if: success()
       with:
-        publish_dir: ./allure-report
+        github_token: ${{ secrets.GITHUB_TOKEN }} 
+        publish_dir: ./allure-report 
+
