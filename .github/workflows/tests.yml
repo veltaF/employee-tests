@@ -43,9 +43,9 @@ jobs:
         allure generate --single-file ./allure-results -o ./allure-report
 
 
-    - name: Upload Allure Report as an artifact 
+    - name: Upload Allure Report as an artifact
       uses: actions/upload-artifact@v3
       with:
         name: allure-report
-        path: ./allure-report/index.html
+        path: ./allure-report/index.html  # Uploading only the single file, not the directory
 
