@@ -37,8 +37,9 @@ jobs:
     - name: Run tests with detailed logging
       run: |
         python -m pytest --alluredir allure-results
-        - name: Generate single-file Allure report
-          run: |
+
+    - name: Generate single-file Allure report
+      run: |
             allure generate --single-file ./allure-results -o ./allure-report
 
 
