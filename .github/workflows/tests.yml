@@ -36,7 +36,7 @@ jobs:
 
     - name: Run tests with detailed logging
       run: |
-        pytest --log-cli-level=INFO --alluredir=./allure-results
+        python -m pytest --alluredir allure-results
         - name: Generate single-file Allure report
           run: |
             allure generate --single-file ./allure-results -o ./allure-report
