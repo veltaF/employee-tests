@@ -34,13 +34,12 @@ jobs:
         ln -s ~/allure-2.30.0/bin/allure /usr/local/bin/allure
         allure --version
 
-    - name: Run tests and generate Allure results
+    - name: Run tests with detailed logging
       run: |
-        pytest --alluredir=./allure-results
-
-    - name: Generate single-file Allure report
-      run: |
-        allure generate --single-file ./allure-results -o ./allure-report
+        pytest --log-cli-level=INFO --alluredir=./allure-results
+        - name: Generate single-file Allure report
+          run: |
+            allure generate --single-file ./allure-results -o ./allure-report
 
 
     - name: Upload Allure Report as an artifact
